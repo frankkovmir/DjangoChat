@@ -1,12 +1,9 @@
 from .prompt_templates import pdf_chat_prompt
 from langchain.chains import LLMChain
-from langchain.chains.retrieval_qa.base import RetrievalQA
 from langchain_community.embeddings import HuggingFaceInstructEmbeddings
-from langchain.memory import ConversationBufferWindowMemory
 from langchain.prompts import PromptTemplate
 from langchain_community.llms import CTransformers
 from langchain_community.vectorstores import Chroma
-from operator import itemgetter
 from .utils import load_config
 import chromadb
 

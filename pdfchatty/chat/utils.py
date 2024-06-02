@@ -1,6 +1,5 @@
 import json
 from datetime import datetime
-import yaml
 from django.templatetags.static import static
 from langchain.schema.messages import HumanMessage, AIMessage
 from django.conf import settings

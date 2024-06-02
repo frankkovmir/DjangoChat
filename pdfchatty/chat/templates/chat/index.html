@@ -203,17 +203,17 @@
 
     <div class="container-fluid">
         <div class="sidebar">
-            <h2>Chat Sessions</h2>
+            <h2>Historie</h2>
             <form method="post" action="">
                 {% csrf_token %}
-                <label for="session_key">Select a chat session</label>
+                <label for="session_key">Historischen Chat auswählen</label>
                 <select id="session_key" name="session_key" class="form-control" onchange="this.form.submit()">
                     <option value="new_session">new_session</option>
                     {% for session in all_sessions %}
                         <option value="{{ session }}" {% if session == session_key %}selected{% endif %}>{{ session }}</option>
                     {% endfor %}
                 </select>
-                <button type="submit" name="delete_chat_session" class="btn btn-secondary">Delete Chat Session</button>
+                <button type="submit" name="delete_chat_session" class="btn btn-secondary">Chat löschen</button>
             </form>
         </div>
         <div class="content">
