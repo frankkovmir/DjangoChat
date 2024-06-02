@@ -39,7 +39,7 @@ class pdfChatChain:
 
     def run(self, user_input, chat_history):
         # Retrieve relevant documents
-        documents = self.retriever.get_relevant_documents(user_input)
+        documents = self.retriever.invoke(user_input)
         # Combine documents and chat history into a single input
         context = " ".join([doc.page_content for doc in documents])
         inputs = {
@@ -48,4 +48,4 @@ class pdfChatChain:
             "human_input": user_input
         }
         # Run the chain
-        return self.chain.run(inputs)
+        return self.chain.invoke(inputs)
