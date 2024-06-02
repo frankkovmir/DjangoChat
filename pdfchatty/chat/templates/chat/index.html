@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load custom_tags %}
 <html>
 <head>
     <title>PDFchatty</title>
@@ -55,6 +56,7 @@
             flex: 1;
             overflow-y: auto;
             margin-bottom: 20px;
+            position: relative;
         }
 
         .chat-message {
@@ -98,7 +100,104 @@
         .btn:hover {
             background-color: #0056b3;
         }
+
+        .loader {
+            width: 60px;
+            aspect-ratio: 1;
+            color: #007bff;
+            border: 10px solid;
+            box-sizing: border-box;
+            border-radius: 50%;
+            animation: l6 2s infinite linear;
+            position: absolute;
+            left: 50%;
+            top: 50%;
+            transform: translate(-50%, -50%);
+            display: none;
+        }
+
+        .loader:before {
+            content: "";
+            position: absolute;
+            height: 20px;
+            inset: auto calc(50% - 10px) 100%;
+            border-radius: 5px 5px 0 0;
+            background:
+                linear-gradient(currentColor 0 0) top/100% 30%,
+                linear-gradient(currentColor 0 0) top/50% 100%;
+            background-repeat: no-repeat;
+        }
+
+        .loader:after {
+            content: "";
+            position: absolute;
+            inset: -8px -10px auto;
+            height: 15px;
+            background:
+                radial-gradient(farthest-side,currentColor 94%,#0000) left,
+                radial-gradient(farthest-side,currentColor 94%,#0000) right;
+            background-size: 15px 15px;
+            background-repeat: no-repeat;
+        }
+
+        @keyframes l6 {
+            0%   {background: conic-gradient(#77a4bd 0     ,#0000 0)}
+            12.5%{background: conic-gradient(#77a4bd 45deg ,#0000 46deg)}
+            25%  {background: conic-gradient(#77a4bd 90deg ,#0000 91deg)}
+            37.5%{background: conic-gradient(#77a4bd 135deg,#0000 136deg)}
+            50%  {background: conic-gradient(#77a4bd 180deg,#0000 181deg)}
+            62.5%{background: conic-gradient(#77a4bd 225deg,#0000 226deg)}
+            75%  {background: conic-gradient(#77a4bd 270deg,#0000 271deg)}
+            87.5%{background: conic-gradient(#77a4bd 315deg,#0000 316deg)}
+            100% {background: conic-gradient(#77a4bd 360deg,#0000 360deg)}
+        }
+
+        .input-group {
+            display: flex;
+            width: 100%;
+            position: relative;
+        }
+
+        .chat-input {
+            flex: 1;
+            padding: 10px;
+            background-color: #3a3f51;
+            border: 1px solid #6c757d;
+            border-radius: 20px;
+            color: white;
+            outline: none;
+            padding-right: 40px;
+        }
+
+        .input-group button {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            background-color: transparent;
+            border: none;
+            color: #ccc;
+            cursor: pointer;
+        }
+
+        .input-group button:hover {
+            color: white;
+        }
+
+        .input-group button svg {
+            width: 20px;
+            height: 20px;
+        }
     </style>
+    <script>
+        function showLoader() {
+            document.getElementById('loader').style.display = 'block';
+        }
+
+        function hideLoader() {
+            document.getElementById('loader').style.display = 'none';
+        }
+    </script>
 </head>
 <body>
     <div class="container-fluid">
@@ -119,6 +218,7 @@
         <div class="content">
             <h1>PDFchatty</h1>
             <div class="chat-container">
+                <div id="loader" class="loader"></div>
                 {% for message in chat_history %}
                     <div class="chat-message {{ message.sender_type }}">
                         <img src="{{ message.avatar }}" alt="{{ message.sender_type }}">
@@ -126,17 +226,31 @@
                             {% if message.message_type == 'text' %}
                                 <p>{{ message.content }}</p>
                             {% else %}
+                                <!-- Handle other types of content if needed -->
                             {% endif %}
                         </div>
                     </div>
                 {% endfor %}
             </div>
-            <form method="post">
+            <form method="post" onsubmit="showLoader()">
                 {% csrf_token %}
-                {{ chat_form }}
-                <button type="submit" class="btn btn-primary">Send</button>
+                <div class="input-group">
+                    {{ chat_form.user_input|add_class:"chat-input" }}
+                    <button type="submit">
+                        <svg viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M0 0h24v24H0z" fill="none"/>
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17.93c-3.95-.49-7-3.85-7-7.93 0-.62.08-1.21.21-1.79L9 15v-3h6v2l2.79 2.79c-.38.12-.77.21-1.19.21-.39 0-.77-.04-1.14-.11l-1.46-1.46L13 17.93zM11 7h2v4h-2z"/>
+                        </svg>
+                    </button>
+                </div>
             </form>
         </div>
     </div>
+    <script>
+        // Hide the loader after the page is fully loaded
+        window.onload = function() {
+            hideLoader();
+        };
+    </script>
 </body>
 </html>
