@@ -5,16 +5,12 @@ from .utils import get_timestamp, get_avatar
 from .database_operations import load_last_k_text_messages, save_text_message, load_messages, get_all_chat_history_ids, \
     delete_chat_history, initialize_db
 from .llm_chains import load_pdf_chat_chain
-from .pdf_handler import add_documents_to_db
 from django.conf import settings
 
 # Initialize the database
 initialize_db()
 
-
 def index(request):
-    add_documents_to_db()  # Load and add PDFs to the database on startup
-
     if request.method == 'POST':
         chat_form = ChatForm(request.POST)
 
@@ -39,6 +35,10 @@ def index(request):
     session_key = request.session.get('session_key', 'new_session')
     chat_history = load_messages(session_key) if session_key != 'new_session' else []
     all_sessions = get_all_chat_history_ids()
+
+    # Add avatar paths to chat history
+    for message in chat_history:
+        message['avatar'] = get_avatar(message['sender_type'])
 
     context = {
         'chat_form': chat_form,

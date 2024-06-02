@@ -120,11 +120,11 @@
                 <div class="chat-container">
                     {% for message in chat_history %}
                         <div class="chat-message {{ message.sender_type }}">
+                            <img src="{{ message.avatar }}" alt="{{ message.sender_type }}">
                             <div class="message-content">
                                 {% if message.message_type == 'text' %}
                                     <p>{{ message.content }}</p>
                                 {% else %}
-                                    <!-- Handle other types of content if needed -->
                                 {% endif %}
                             </div>
                         </div>
