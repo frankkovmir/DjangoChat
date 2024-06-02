@@ -3,7 +3,6 @@ from langchain.schema.document import Document
 from .llm_chains import load_vectordb, create_embeddings
 from .utils import load_config
 import pypdfium2
-import os
 
 config = load_config()
 
@@ -31,4 +30,5 @@ def add_documents_to_db(pdf_paths):
     documents = get_document_chunks(texts)
     vector_db = load_vectordb(create_embeddings())
     vector_db.add_documents(documents)
+    vector_db.persist()
     print("Documents added to db.")

@@ -93,7 +93,7 @@ CTRANSFORMERS = {
     'model_config': {
         'max_new_tokens': 256,
         'temperature': 0.2,
-        'context_length': 2048,
+        'context_length': 4096,
         'gpu_layers': 0,
         'threads': -1,
     },

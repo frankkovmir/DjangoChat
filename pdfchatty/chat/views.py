@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import ChatSession, Message
+from .models import ChatSession
 from .forms import ChatForm
 from .utils import get_timestamp, get_avatar
 from .database_operations import load_last_k_text_messages, save_text_message, load_messages, get_all_chat_history_ids, \

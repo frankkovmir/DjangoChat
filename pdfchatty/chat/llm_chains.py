@@ -24,6 +24,7 @@ def load_vectordb(embeddings):
         client=persistent_client,
         collection_name=config["chromadb"]["collection_name"],
         embedding_function=embeddings,
+        persist_directory=config["chromadb"]["chromadb_path"]
     )
 
 def load_pdf_chat_chain():
