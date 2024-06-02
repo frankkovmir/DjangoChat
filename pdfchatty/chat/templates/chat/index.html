@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>PDFchatty</title>
+    <style>
+        body {
+            background-color: #2b313e;
+            color: white;
+        }
+
+        .container {
+            padding: 20px;
+        }
+
+        .chat-container {
+            border: 1px solid #475063;
+            padding: 20px;
+            margin-bottom: 20px;
+            background-color: #2b313e;
+        }
+
+        .chat-message {
+            display: flex;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .chat-message img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-right: 10px;
+        }
+
+        .chat-message.human .message-content {
+            background-color: #475063;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .chat-message.ai .message-content {
+            background-color: #6c757d;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #3a3f51;
+            border: 1px solid #6c757d;
+            color: white;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            background-color: #007bff;
+            border: none;
+            color: white;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        .sidebar {
+            width: 380px;
+            padding: 20px;
+            background-color: #2b313e;
+            color: white;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        .sidebar li {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .form-control {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .btn {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .form-control[type="file"] {
+            padding: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>PDFchatty</h1>
+        <div class="row">
+            <div class="col-md-4 sidebar">
+                <h2>Chat Sessions</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="session_key">Select a chat session</label>
+                    <select id="session_key" name="session_key" class="form-control">
+                        <option value="new_session">new_session</option>
+                        {% for session in all_sessions %}
+                            <option value="{{ session }}" {% if session == session_key %}selected{% endif %}>{{ session }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Delete Chat Session</button>
+                </form>
+            </div>
+            <div class="col-md-8">
+                <div class="chat-container">
+                    {% for message in chat_history %}
+                        <div class="chat-message {{ message.sender_type }}">
+                            <div class="message-content">
+                                {% if message.message_type == 'text' %}
+                                    <p>{{ message.content }}</p>
+                                {% else %}
+                                    <!-- Handle other types of content if needed -->
+                                {% endif %}
+                            </div>
+                        </div>
+                    {% endfor %}
+                </div>
+                <form method="post">
+                    {% csrf_token %}
+                    {{ chat_form }}
+                    <button type="submit" class="btn btn-primary">Send</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
