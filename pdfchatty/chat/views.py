@@ -12,21 +12,30 @@ initialize_db()
 
 def index(request):
     if request.method == 'POST':
-        chat_form = ChatForm(request.POST)
+        if 'user_input' in request.POST:
+            # Handle chat form submission
+            chat_form = ChatForm(request.POST)
+            if chat_form.is_valid():
+                user_input = chat_form.cleaned_data['user_input']
+                session_key = request.session.get('session_key', 'new_session')
+                if session_key == 'new_session':
+                    session_key = get_timestamp()
+                    request.session['session_key'] = session_key
 
-        if chat_form.is_valid():
-            user_input = chat_form.cleaned_data['user_input']
-            session_key = request.session.get('session_key', 'new_session')
-            if session_key == 'new_session':
-                session_key = get_timestamp()
-                request.session['session_key'] = session_key
-
-            chat_session, created = ChatSession.objects.get_or_create(session_key=session_key)
-            llm_chain = load_pdf_chat_chain()
-            chat_history = load_last_k_text_messages(session_key, settings.CHAT_CONFIG['chat_memory_length'])
-            llm_answer = llm_chain.run(user_input=user_input, chat_history=chat_history)
-            save_text_message(session_key, 'human', user_input)
-            save_text_message(session_key, 'ai', llm_answer)
+                chat_session, created = ChatSession.objects.get_or_create(session_key=session_key)
+                llm_chain = load_pdf_chat_chain()
+                chat_history = load_last_k_text_messages(session_key, settings.CHAT_CONFIG['chat_memory_length'])
+                llm_answer = llm_chain.run(user_input=user_input, chat_history=chat_history)
+                save_text_message(session_key, 'human', user_input)
+                save_text_message(session_key, 'ai', llm_answer)
+                return redirect('index')
+        else:
+            # Handle chat session selection and deletion
+            session_key = request.POST.get('session_key')
+            request.session['session_key'] = session_key
+            if 'delete_chat_session' in request.POST:
+                delete_chat_history(session_key)
+                request.session['session_key'] = 'new_session'
             return redirect('index')
 
     else:
