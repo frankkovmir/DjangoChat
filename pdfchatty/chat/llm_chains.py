@@ -48,4 +48,4 @@ class pdfChatChain:
             "human_input": user_input
         }
         # Run the chain
-        return self.chain.invoke(inputs)
+        return self.chain.run(inputs)
