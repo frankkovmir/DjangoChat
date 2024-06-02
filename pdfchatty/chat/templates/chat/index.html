@@ -2,7 +2,6 @@
 <html>
 <head>
     <title>PDFchatty</title>
-    {% load static %}
     <style>
         body {
             background-color: #2b313e;
@@ -103,24 +102,33 @@
     <div class="container">
         <h1>PDFchatty</h1>
         <div class="row">
+            <div class="col-md-4 sidebar">
+                <h2>Chat Sessions</h2>
+                <form method="post" enctype="multipart/form-data">
+                    {% csrf_token %}
+                    <label for="session_key">Select a chat session</label>
+                    <select id="session_key" name="session_key" class="form-control">
+                        <option value="new_session">new_session</option>
+                        {% for session in all_sessions %}
+                            <option value="{{ session }}" {% if session == session_key %}selected{% endif %}>{{ session }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-secondary">Delete Chat Session</button>
+                </form>
+            </div>
             <div class="col-md-8">
                 <div class="chat-container">
-                    {% if user_input %}
-                        <div class="chat-message human">
-                            <img src="{{ avatar_user }}" alt="User Avatar">
+                    {% for message in chat_history %}
+                        <div class="chat-message {{ message.sender_type }}">
                             <div class="message-content">
-                                <p>{{ user_input }}</p>
+                                {% if message.message_type == 'text' %}
+                                    <p>{{ message.content }}</p>
+                                {% else %}
+                                    <!-- Handle other types of content if needed -->
+                                {% endif %}
                             </div>
                         </div>
-                    {% endif %}
-                    {% if llm_answer %}
-                        <div class="chat-message ai">
-                            <img src="{{ avatar_bot }}" alt="Bot Avatar">
-                            <div class="message-content">
-                                <p>{{ llm_answer }}</p>
-                            </div>
-                        </div>
-                    {% endif %}
+                    {% endfor %}
                 </div>
                 <form method="post">
                     {% csrf_token %}
