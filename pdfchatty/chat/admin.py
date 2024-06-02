@@ -1,5 +1,4 @@
 from django.contrib import admin
-from chat.models import ChatSession, Message
+from chat.models import ProcessedFile
 
-admin.site.register(ChatSession)
-admin.site.register(Message)
+admin.site.register(ProcessedFile)

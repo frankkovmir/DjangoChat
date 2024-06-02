@@ -1,12 +1,10 @@
 from langchain.text_splitter import RecursiveCharacterTextSplitter
 from langchain.schema.document import Document
 from .llm_chains import load_vectordb, create_embeddings
-from .utils import load_config, load_pdfs_from_directory
+from .utils import load_config
 import pypdfium2
-config = load_config()
 
-def get_pdf_texts(pdfs_bytes_list):
-    return [extract_text_from_pdf(pdf_bytes) for pdf_bytes in pdfs_bytes_list]
+config = load_config()
 
 def extract_text_from_pdf(pdf_path):
     pdf_file = pypdfium2.PdfDocument(pdf_path)
@@ -25,9 +23,8 @@ def get_document_chunks(text_list):
             documents.append(Document(page_content=chunk))
     return documents
 
-def add_documents_to_db():
-    pdf_paths = load_pdfs_from_directory(config['pdf_directory'])
-    texts = get_pdf_texts(pdf_paths)
+def add_documents_to_db(pdf_paths):
+    texts = [extract_text_from_pdf(pdf_path) for pdf_path in pdf_paths]
     documents = get_document_chunks(texts)
     vector_db = load_vectordb(create_embeddings())
     vector_db.add_documents(documents)

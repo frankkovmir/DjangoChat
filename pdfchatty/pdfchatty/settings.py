@@ -82,6 +82,9 @@ USE_TZ = True
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, "static")]
 
+if DEBUG:
+    STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 CTRANSFORMERS = {
@@ -116,7 +119,5 @@ CHROMADB = {
     'chromadb_path': os.path.join(BASE_DIR, 'chroma_db'),
     'collection_name': 'pdfs',
 }
-
-CHAT_SESSIONS_DATABASE_PATH = os.path.join(BASE_DIR, 'chat_sessions', 'chat_sessions.db')
 
 PDF_DIRECTORY = os.path.join(BASE_DIR, 'pdfs')
