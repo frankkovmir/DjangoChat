@@ -2,21 +2,59 @@
 <html>
 <head>
     <title>PDFchatty</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <style>
         body {
             background-color: #2b313e;
             color: white;
+            height: 100vh;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
         }
 
-        .container {
+        .container-fluid {
+            display: flex;
+            height: 100%;
+        }
+
+        .sidebar {
+            background-color: #1c1e26;
             padding: 20px;
+            width: 336px;
+            height: 100%;
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
+            box-sizing: border-box;
+            flex-shrink: 0;
+        }
+
+        .sidebar h2 {
+            margin-top: 0;
+        }
+
+        .sidebar .form-control {
+            margin-bottom: 10px;
+        }
+
+        .sidebar .btn {
+            margin-bottom: 10px;
+        }
+
+        .content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
         }
 
         .chat-container {
             border: 1px solid #475063;
             padding: 20px;
-            margin-bottom: 20px;
             background-color: #2b313e;
+            flex: 1;
+            overflow-y: auto;
+            margin-bottom: 20px;
         }
 
         .chat-message {
@@ -45,16 +83,12 @@
         }
 
         .form-control {
-            width: 100%;
-            padding: 10px;
-            margin-bottom: 10px;
             background-color: #3a3f51;
             border: 1px solid #6c757d;
             color: white;
         }
 
         .btn {
-            padding: 10px 20px;
             background-color: #007bff;
             border: none;
             color: white;
@@ -64,78 +98,44 @@
         .btn:hover {
             background-color: #0056b3;
         }
-
-        .sidebar {
-            width: 380px;
-            padding: 20px;
-            background-color: #2b313e;
-            color: white;
-        }
-
-        .sidebar h2 {
-            margin-top: 0;
-        }
-
-        .sidebar ul {
-            list-style: none;
-            padding: 0;
-        }
-
-        .sidebar li {
-            margin-bottom: 10px;
-        }
-
-        .sidebar .form-control {
-            margin-bottom: 10px;
-        }
-
-        .sidebar .btn {
-            margin-bottom: 10px;
-        }
-
-        .sidebar .form-control[type="file"] {
-            padding: 3px;
-        }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>PDFchatty</h1>
-        <div class="row">
-            <div class="col-md-4 sidebar">
-                <h2>Chat Sessions</h2>
-                <form method="post" enctype="multipart/form-data">
-                    {% csrf_token %}
-                    <label for="session_key">Select a chat session</label>
-                    <select id="session_key" name="session_key" class="form-control">
-                        <option value="new_session">new_session</option>
-                        {% for session in all_sessions %}
-                            <option value="{{ session }}" {% if session == session_key %}selected{% endif %}>{{ session }}</option>
-                        {% endfor %}
-                    </select>
-                    <button type="submit" class="btn btn-secondary">Delete Chat Session</button>
-                </form>
-            </div>
-            <div class="col-md-8">
-                <div class="chat-container">
-                    {% for message in chat_history %}
-                        <div class="chat-message {{ message.sender_type }}">
-                            <img src="{{ message.avatar }}" alt="{{ message.sender_type }}">
-                            <div class="message-content">
-                                {% if message.message_type == 'text' %}
-                                    <p>{{ message.content }}</p>
-                                {% else %}
-                                {% endif %}
-                            </div>
-                        </div>
+    <div class="container-fluid">
+        <div class="sidebar">
+            <h2>Chat Sessions</h2>
+            <form method="post">
+                {% csrf_token %}
+                <label for="session_key">Select a chat session</label>
+                <select id="session_key" name="session_key" class="form-control">
+                    <option value="new_session">new_session</option>
+                    {% for session in all_sessions %}
+                        <option value="{{ session }}" {% if session == session_key %}selected{% endif %}>{{ session }}</option>
                     {% endfor %}
-                </div>
-                <form method="post">
-                    {% csrf_token %}
-                    {{ chat_form }}
-                    <button type="submit" class="btn btn-primary">Send</button>
-                </form>
+                </select>
+                <button type="submit" class="btn btn-secondary">Delete Chat Session</button>
+            </form>
+        </div>
+        <div class="content">
+            <h1>PDFchatty</h1>
+            <div class="chat-container">
+                {% for message in chat_history %}
+                    <div class="chat-message {{ message.sender_type }}">
+                        <img src="{{ message.avatar }}" alt="{{ message.sender_type }}">
+                        <div class="message-content">
+                            {% if message.message_type == 'text' %}
+                                <p>{{ message.content }}</p>
+                            {% else %}
+                            {% endif %}
+                        </div>
+                    </div>
+                {% endfor %}
             </div>
+            <form method="post">
+                {% csrf_token %}
+                {{ chat_form }}
+                <button type="submit" class="btn btn-primary">Send</button>
+            </form>
         </div>
     </div>
 </body>
