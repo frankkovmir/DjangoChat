@@ -91,10 +91,10 @@ CTRANSFORMERS = {
     },
     'model_type': 'mistral',
     'model_config': {
-        'max_new_tokens': 256,
-        'temperature': 0.2,
-        'context_length': 4096,
-        'gpu_layers': 0,
+        'max_new_tokens': 256, #maximale Nummer der Antwort Token, je höher desto ggf. ausführlichere Antwort auf Kosten der Zeit
+        'temperature': 0, # beeinflusst die "randomness" der Antwort bzw. wie deterministisch diese ist
+        'context_length': 4096, # maximale Länge des Input Kontextes
+        'gpu_layers': 0, #
         'threads': -1,
     },
 }
@@ -105,8 +105,8 @@ CHAT_CONFIG = {
 }
 
 PDF_TEXT_SPLITTER = {
-    'chunk_size': 1024,
-    'overlap': 50,
+    'chunk_size': 1024, # Größe der "chunks" in characters in die das PDF zerlegt wird. Mehr heißt kleinere, größere Textabschnitte; das Modell muss es aber verarbeiten können
+    'overlap': 100, # Sorgt dafür, dass Kontextinformationen zwischen chunks nicht verloren geht. Höhere Werte steigern Verständnis auf Kosten der Performance
     'separators': ["\n", "\n\n"],
 }
 
