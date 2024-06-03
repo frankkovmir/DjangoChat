@@ -94,7 +94,7 @@ CTRANSFORMERS = {
         'max_new_tokens': 256, #maximale Nummer der Antwort Token, je höher desto ggf. ausführlichere Antwort auf Kosten der Zeit
         'temperature': 0, # beeinflusst die "randomness" der Antwort bzw. wie deterministisch diese ist
         'context_length': 4096, # maximale Länge des Input Kontextes
-        'gpu_layers': 0, #
+        'gpu_layers': 30, # Auslagerung der Layer auf GPU. Sollte auf die GPU angepasst werden.
         'threads': -1,
     },
 }
