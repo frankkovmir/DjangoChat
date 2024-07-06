@@ -1,0 +1,1 @@
+Hier gehört das heruntergeladene mistral model und die heruntergeladene vektordatenbank rein
